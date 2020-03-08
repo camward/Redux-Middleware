@@ -1,12 +1,17 @@
-import React from 'react';
-import './App.css';
+import React, {Component} from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <h1>Redux Middleware</h1>
-    </div>
-  );
+import Header from './components/Header';
+import ImageGrid from './components/ImageGrid';
+
+class App extends Component {
+  render() {
+    return (
+      <div>
+        <Header/>
+        <ImageGrid/>
+      </div>
+    );
+  }
 }
 
 export default App;
