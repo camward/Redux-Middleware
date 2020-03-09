@@ -1,26 +1,27 @@
-import React, {Component} from 'react';
-
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import Button from '../Button';
+import Stats from '../Stats';
+import { handleImagesLoad } from '../../actions/images';
 import './style.css';
 
-const key = '5f96323678d05ff0c4eb264ef184556868e303b32a2db88ecbf15746e6f25e02';
-
 class ImageGrid extends Component {
-  state = {
-    images: [],
-  };
 
   componentDidMount() {
-    fetch(`https://api.unsplash.com/photos/?client_id=${key}&per_page=10`)
-      .then(res => res.json())
-      .then(images => {
-        this.setState({
-          images,
-        });
-      });
+    const { nextPage } = this.props;
+    this.handleLoadImages(nextPage);
   }
 
+  handleLoadImages = () => {
+    const { isLoading, loadImages, nextPage } = this.props;
+    if (!isLoading) {
+      loadImages(nextPage);
+    }
+  };
+
   render() {
-    const {images} = this.state;
+    const { isLoading, images, error, imageStats } = this.props;
+
     return (
       <div className="content">
         <section className="grid">
@@ -31,6 +32,9 @@ class ImageGrid extends Component {
                 image.height / image.width,
               )}`}
             >
+              <span className="stats">
+                {image.likes}
+              </span>
               <img
                 src={image.urls.small}
                 alt={image.user.username}
@@ -38,9 +42,32 @@ class ImageGrid extends Component {
             </div>
           ))}
         </section>
+
+        {error && (
+          <div className="error">{JSON.stringify(error)}</div>
+        )}
+
+        <Button onClick={this.handleLoadImages} loading={isLoading}>
+          Загрузить еще
+        </Button>
       </div>
     );
   }
 }
 
-export default ImageGrid;
+const mapStateToProps = ({ isLoading, images, error, imageStats, nextPage }) => ({
+  isLoading,
+  images,
+  error,
+  imageStats,
+  nextPage,
+});
+
+const mapDispatchToProps = dispatch => ({
+  loadImages: (page) => dispatch(handleImagesLoad(page)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ImageGrid);
