@@ -1,4 +1,4 @@
-import { STATS } from 'actionTypes';
+import { STATS } from './actionTypes';
 
 const loadImageStats = id => ({
   type: STATS.LOAD,

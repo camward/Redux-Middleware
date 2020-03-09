@@ -1,4 +1,4 @@
-import { IMAGES } from 'actionTypes';
+import { IMAGES } from './actionTypes';
 
 const loadImages = () => ({
   type: IMAGES.LOAD,
